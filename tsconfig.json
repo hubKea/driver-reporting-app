@@ -1,12 +1,14 @@
 {
-    "compilerOptions": {
-      "target": "esnext",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "esModuleInterop": true,
-      "strict": true,
-      "skipLibCheck": true,
-      "typeRoots": ["./node_modules/@types", "./src/types"]
-    },
-    "include": ["src/**/*"]
-  }
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"]
+}
