@@ -1,7 +1,9 @@
+const API_BASE_URL = 'https://driver-reporting-app.onrender.com';
+
 export default class ClientAPI {
 // Helper method for common fetch operations
 async fetchJSON(endpoint, options = {}) {
-    const url = `${endpoint}`;
+    const url = `${endpoint.startsWith('http') ? endpoint : API_BASE_URL + endpoint}`;
     
     // Only include Content-Type for requests with body
     const headers = {
@@ -52,7 +54,7 @@ async getBreakRequests(startDate = null, endDate = null) {
     }
     
     const queryString = queryParams.toString();
-    const endpoint = queryString ? `/api/break_requests?${queryString}` : '/api/break_requests';
+    const endpoint = queryString ? `${API_BASE_URL}/api/break_requests?${queryString}` : `${API_BASE_URL}/api/break_requests`;
     
     return await this.fetchJSON(endpoint, {
         method: 'GET'
@@ -69,7 +71,7 @@ async getBreakRequests(startDate = null, endDate = null) {
  * Body: { id: string, user_id: string, break_type: string, break_duration: number, submission_date: number, notes: string }
  */
 async createBreakRequest(breakRequestData) {
-    return await this.fetchJSON('/api/break_requests', {
+    return await this.fetchJSON(`${API_BASE_URL}/api/break_requests`, {
         method: 'POST',
         body: JSON.stringify({
             truck_registration_number: breakRequestData.truck_registration_number,
@@ -123,7 +125,7 @@ async getBreakdownReports(startDate = null, endDate = null) {
     }
     
     const queryString = queryParams.toString();
-    const endpoint = queryString ? `/api/breakdown_reports?${queryString}` : '/api/breakdown_reports';
+    const endpoint = queryString ? `${API_BASE_URL}/api/breakdown_reports?${queryString}` : `${API_BASE_URL}/api/breakdown_reports`;
     
     return await this.fetchJSON(endpoint);
 }
@@ -160,7 +162,7 @@ async getBreakdownReports(startDate = null, endDate = null) {
  * }
  */
 async createBreakdownReport(breakdownReportRequest) {
-    return await this.fetchJSON('/api/breakdown_reports', {
+    return await this.fetchJSON(`${API_BASE_URL}/api/breakdown_reports`, {
         method: 'POST',
         body: JSON.stringify(breakdownReportRequest)
     });
@@ -171,7 +173,7 @@ async createBreakdownReport(breakdownReportRequest) {
  * Response: { id: string; user_id: string; truck_number: string; breakdown_location: string; issue_description: string; submission_date: number; status: string; notes: string; resolution_notes: string; }
  */
 async resolveBreakdownReport(breakdownReportId, resolveBreakdownReportRequest) {
-    const endpoint = `/api/breakdown_reports/${encodeURIComponent(breakdownReportId)}`;
+    const endpoint = `${API_BASE_URL}/api/breakdown_reports/${encodeURIComponent(breakdownReportId)}`;
     
     return await this.fetchJSON(endpoint, {
         method: 'PUT',
@@ -205,7 +207,7 @@ async downloadReports(reportType, startDate = null, endDate = null) {
         queryParams.append('end_date', endDate.toString());
     }
     
-    const endpoint = `/api/download_reports?${queryParams.toString()}`;
+    const endpoint = `${API_BASE_URL}/api/download_reports?${queryParams.toString()}`;
     
     const response = await fetch(endpoint, {
         method: 'GET'
@@ -224,7 +226,7 @@ async downloadReports(reportType, startDate = null, endDate = null) {
  * Response: { name: string, id: string, handle: string, email: string }
  */
 async getStormAuthUserById() {
-    return await this.fetchJSON('/api/storm/auth_user');
+    return await this.fetchJSON(`${API_BASE_URL}/api/storm/auth_user`);
 }
 
 /**
@@ -232,7 +234,7 @@ async getStormAuthUserById() {
  * Response: { name: string, id: string, handle: string, email: string }
  */
 async getCurrentStormAuthUser() {
-    return await this.fetchJSON('/api/storm/me');
+    return await this.fetchJSON(`${API_BASE_URL}/api/storm/me`);
 }
 
 /**
@@ -243,7 +245,7 @@ async getCurrentStormAuthUser() {
  */
 async login(username, password) {
     // The fix is to explicitly add the Content-Type header
-    return await this.fetchJSON('/api/login', {
+    return await this.fetchJSON(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
