@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Compiled TypeScript files
+dist/
+
+# Environment variables (NEVER commit this file)
+.env
+
+# Log files
+*.log

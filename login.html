@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" href="/favicon.jpg" type="image/jpeg"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Login - Driver Reporting System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Primary Background */
+        }
+        .header {
+            background-color: #1f2937; /* Dark Charcoal Header */
+            border-bottom: 1px solid #374151;
+        }
+        .header-title {
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .nav-link {
+            color: #9e1432; /* Lighter text for nav links */
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-link:hover, .nav-link-active {
+            color: #11a7c2; /* Brighter on hover/active */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+        }
+        .btn-primary {
+            background-color: #3b82f6; /* Vibrant Blue Accent */
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.625rem 1.25rem;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        .form-input:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px #bfdbfe;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-xl font-bold text-white">Driver Reporting System</h1>
+                    </div>
+                </div>
+
+                <nav class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/report_breakdown.html" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200">
+                            Report Breakdown
+                        </a>
+                        <a href="/request_break.html" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200">
+                            Request Break
+                        </a>
+                        <a href="/dashboard.html" id="dashboardLink" class="hidden px-3 py-2 rounded-md text-sm font-medium text-white">Dashboard</a>
+                        <a href="/breakdown_reports.html" id="breakdownReportsLink" class="hidden px-3 py-2 rounded-md text-sm font-medium text-white">Breakdown Reports</a>
+                        <a href="/break_requests.html" id="breakRequestsLink" class="hidden px-3 py-2 rounded-md text-sm font-medium text-white">Break Requests</a>
+                    </div>
+                </nav>
+
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6 space-x-3">
+                        <a href="/login.html" id="loginLink" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-700">
+                            Manager Login
+                        </a>
+                        <button id="logoutBtn" class="hidden px-3 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700">
+                            Logout
+                        </button>
+                        <div class="px-3 py-1 rounded-full text-xs font-medium bg-blue-700 text-white">
+                            <span id="userRole">Driver</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:hidden">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-700 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false" onclick="toggleMobileMenu()">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-blue-800">
+                <a href="/report_breakdown.html" class="block px-3 py-2 rounded-md text-base font-medium text-white">Report Breakdown</a>
+                <a href="/request_break.html" class="block px-3 py-2 rounded-md text-base font-medium text-white">Request Break</a>
+                <a href="/dashboard.html" id="mobileDashboardLink" class="hidden block px-3 py-2 rounded-md text-base font-medium text-white">Dashboard</a>
+                <a href="/breakdown_reports.html" id="mobileBreakdownReportsLink" class="hidden block px-3 py-2 rounded-md text-base font-medium text-white">Breakdown Reports</a>
+                <a href="/break_requests.html" id="mobileBreakRequestsLink" class="hidden block px-3 py-2 rounded-md text-base font-medium text-white">Break Requests</a>
+                <div class="border-t border-blue-700 pt-4 pb-3">
+                    <a href="/login.html" id="mobileLoginLink" class="block px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-700">Manager Login</a>
+                    <button id="mobileLogoutBtn" class="hidden w-full text-left mt-2 px-3 py-2 rounded-md text-sm font-medium text-white bg-red-600">Logout</button>
+                    <div class="mt-3 text-xs font-medium text-blue-200">Role: <span id="mobileUserRole">Driver</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="bg-white rounded-lg shadow-lg p-8 border border-slate-200">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Manager Login</h2>
+                    <p class="mt-2 text-sm text-slate-600">Access the management dashboard.</p>
+                </div>
+
+                <div id="errorMessage" class="hidden mb-4 p-4 rounded-md bg-red-50 border border-red-200">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <div class="ml-3"><p class="text-sm font-medium text-red-700" id="errorText"></p></div>
+                    </div>
+                </div>
+
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label for="username" class="block text-sm font-medium mb-2 text-slate-700">Username</label>
+                        <input id="username" name="username" type="text" required class="form-input" placeholder="Enter your username"/>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium mb-2 text-slate-700">Password</label>
+                        <input id="password" name="password" type="password" required class="form-input" placeholder="Enter your password"/>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn-primary w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Sign In</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import ClientAPI from '/client.js';
+        const client = new ClientAPI();
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function updateNavigationForRole(role) {
+            const managerLinks = ['dashboardLink', 'breakdownReportsLink', 'breakRequestsLink', 'mobileDashboardLink', 'mobileBreakdownReportsLink', 'mobileBreakRequestsLink'];
+            const loginLinks = ['loginLink', 'mobileLoginLink'];
+            const logoutBtns = ['logoutBtn', 'mobileLogoutBtn'];
+            const roleIndicators = ['userRole', 'mobileUserRole'];
+
+            const show = (id) => document.getElementById(id)?.classList.remove('hidden');
+            const hide = (id) => document.getElementById(id)?.classList.add('hidden');
+
+            if (role === 'manager') {
+                managerLinks.forEach(show);
+                loginLinks.forEach(hide);
+                logoutBtns.forEach(show);
+                roleIndicators.forEach(id => {
+                    if (document.getElementById(id)) document.getElementById(id).textContent = 'Manager';
+                });
+            } else {
+                managerLinks.forEach(hide);
+                loginLinks.forEach(show);
+                logoutBtns.forEach(hide);
+                roleIndicators.forEach(id => {
+                    if (document.getElementById(id)) document.getElementById(id).textContent = 'Driver';
+                });
+            }
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('userToken');
+            localStorage.removeItem('userRole');
+            updateNavigationForRole('driver');
+            window.location.href = '/login.html';
+        }
+
+        function showError(message) {
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            document.getElementById('errorMessage').classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            hideError();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+                showError('Please enter both username and password.');
+                return;
+            }
+
+            try {
+                const result = await client.login(username, password);
+                if (result.token) {
+                    sessionStorage.setItem('userToken', result.token);
+                    localStorage.setItem('userRole', 'manager');
+                    window.location.href = '/dashboard.html';
+                }
+            } catch (error) {
+                showError(error.message || 'Invalid username or password.');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }
+        
+        // Make functions globally accessible for onclick attributes
+        window.toggleMobileMenu = toggleMobileMenu;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = sessionStorage.getItem('userToken');
+            const role = localStorage.getItem('userRole');
+
+            if (token && role === 'manager') {
+                window.location.href = '/dashboard.html';
+                return;
+            }
+            
+            updateNavigationForRole('driver');
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
+            document.getElementById('username').focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" href="/favicon.jpg" type="image/jpeg"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"/>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <title>Manager Dashboard - Driver Reporting System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Primary Background */
+        }
+        .header {
+            background-color: #1f2937; /* Dark Charcoal Header */
+            border-bottom: 1px solid #374151;
+        }
+        .header-title {
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .nav-link {
+            color: #d1d5db; /* Lighter text for nav links */
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-link:hover, .nav-link-active {
+            color: #ffffff; /* Brighter on hover/active */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+        }
+        .btn-primary {
+            background-color: #3b82f6; /* Vibrant Blue Accent */
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.625rem 1.25rem;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+         .btn-danger {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <header class="shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <h1 class="text-xl font-bold text-white">Driver Reporting System</h1>
+                </div>
+              </div>
+        
+              <nav class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+                  <a href="/report_breakdown.html" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200">
+                    Report Breakdown
+                  </a>
+                  <a href="/request_break.html" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200">
+                    Request Break
+                  </a>
+                  
+                  <a href="/dashboard.html" id="dashboardLink" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200 hidden">
+                    Dashboard
+                  </a>
+                  <a href="/breakdown_reports.html" id="breakdownReportsLink" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200 hidden">
+                    Breakdown Reports
+                  </a>
+                  <a href="/break_requests.html" id="breakRequestsLink" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200 hidden">
+                    Break Requests
+                  </a>
+                </div>
+              </nav>
+        
+              <div class="hidden md:block">
+                <div class="ml-4 flex items-center md:ml-6 space-x-3">
+                  <a href="/login.html" id="loginLink" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200" style="font-family: 'Inter', sans-serif; font-weight: 600; background-color: #1E40AF;" onmouseover="this.style.backgroundColor='#1E3A8A'" onmouseout="this.style.backgroundColor='#1E40AF'">
+                    Manager Login
+                  </a>
+                  
+                  <button id="logoutBtn" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200 hidden" style="font-family: 'Inter', sans-serif; font-weight: 600; background-color: #DC2626;" onmouseover="this.style.backgroundColor='#B91C1C'" onmouseout="this.style.backgroundColor='#DC2626'" onclick="logout()">
+                    Logout
+                  </button>
+                  
+                  <div class="px-3 py-1 rounded-full text-xs font-medium" style="background-color: #1E40AF; font-family: 'Inter', sans-serif; font-weight: 500;">
+                    <span id="userRole">Driver</span>
+                  </div>
+                </div>
+              </div>
+        
+              <div class="md:hidden">
+                <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-200" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'" aria-controls="mobile-menu" aria-expanded="false" onclick="toggleMobileMenu()">
+                  <span class="sr-only">Open main menu</span>
+                  <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        
+          <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3" style="background-color: #1E40AF;">
+              <a href="/report_breakdown.html" class="block px-3 py-2 rounded-md text-base font-medium text-white transition-colors duration-200" style="font-family: 'Inter', sans-serif; font-weight: 500;" onmouseover="this.style.backgroundColor='#1E3A8A'" onmouseout="this.style.backgroundColor='transparent'">
+                Report Breakdown
+              </a>
+              <a href="/request_break.html" class="block px-3 py-2 rounded-md text-base font-medium text-white transition-colors duration-200" style="font-family: 'Inter', sans-serif; font-weight: 500;" onmouseover="this.style.backgroundColor='#1E3A8A'" onmouseout="this.style.backgroundColor='transparent'">
+                Request Break
+              </a>
+              
+              <a href="/dashboard.html" id="mobileDashboardLink" class="block px-3 py-2 rounded-md text-base font-medium text-white transition-colors duration-200 hidden" style="font-family: 'Inter', sans-serif; font-weight: 500; background-color: #1E3A8A;">
+                Dashboard
+              </a>
+              <a href="/breakdown_reports.html" id="mobileBreakdownReportsLink" class="block px-3 py-2 rounded-md text-base font-medium text-white transition-colors duration-200 hidden" style="font-family: 'Inter', sans-serif; font-weight: 500;" onmouseover="this.style.backgroundColor='#1E3A8A'" onmouseout="this.style.backgroundColor='transparent'">
+                Breakdown Reports
+              </a>
+              <a href="/break_requests.html" id="mobileBreakRequestsLink" class="block px-3 py-2 rounded-md text-base font-medium text-white transition-colors duration-200 hidden" style="font-family: 'Inter', sans-serif; font-weight: 500;" onmouseover="this.style.backgroundColor='#1E3A8A'" onmouseout="this.style.backgroundColor='transparent'">
+                Break Requests
+              </a>
+              
+              <div class="border-t pt-4 pb-3" style="border-color: #2563EB;">
+                <div class="px-3 space-y-2">
+                  <a href="/login.html" id="mobileLoginLink" class="block px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200" style="font-family: 'Inter', sans-serif; font-weight: 500; background-color: #1E40AF;" onmouseover="this.style.backgroundColor='#1E3A8A'" onmouseout="this.style.backgroundColor='#1E40AF'">
+                    Manager Login
+                  </a>
+                  <button id="mobileLogoutBtn" class="block w-full text-left px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200 hidden" style="font-family: 'Inter', sans-serif; font-weight: 500; background-color: #DC2626;" onmouseover="this.style.backgroundColor='#B91C1C'" onmouseout="this.style.backgroundColor='#DC2626'" onclick="logout()">
+                    Logout
+                  </button>
+                  <div class="text-xs font-medium" style="color: #BFDBFE; font-family: 'Inter', sans-serif; font-weight: 500;">Role: <span id="mobileUserRole">Driver</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </header>
+
+    <div id="accessDeniedModal" class="fixed z-50 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">​</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title" style="font-family: 'Inter', sans-serif; font-weight: 600;">
+                                Access Denied
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500" style="font-family: 'Inter', sans-serif;">
+                                    You need to be logged in as a manager to access this dashboard. Please log in with your manager credentials.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" style="background-color: #2563EB; font-family: 'Inter', sans-serif; font-weight: 600;" onclick="redirectToLogin()">
+                        Go to Login
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" style="font-family: 'Inter', sans-serif; font-weight: 500;" onclick="goBack()">
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboardContent" class="hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900" style="font-family: 'Inter', sans-serif; font-weight: 700; color: #1E293B;">Manager Dashboard</h1>
+                <p class="mt-2 text-gray-600" style="font-family: 'Inter', sans-serif; color: #64748B;">Overview of breakdown reports and break requests</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white overflow-hidden shadow rounded-lg" style="border: 1px solid #E2E8F0;">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate" style="font-family: 'Inter', sans-serif; color: #64748B;">Total Breakdown Reports</dt>
+                                    <dd class="text-lg font-medium text-gray-900" style="font-family: 'Inter', sans-serif; font-weight: 600; color: #1E293B;" id="totalBreakdownReports">-</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg" style="border: 1px solid #E2E8F0;">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate" style="font-family: 'Inter', sans-serif; color: #64748B;">Total Break Requests</dt>
+                                    <dd class="text-lg font-medium text-gray-900" style="font-family: 'Inter', sans-serif; font-weight: 600; color: #1E293B;" id="totalBreakRequests">-</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg" style="border: 1px solid #E2E8F0;">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6" style="color: #D97706;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate" style="font-family: 'Inter', sans-serif; color: #64748B;">Pending Reports</dt>
+                                    <dd class="text-lg font-medium" style="font-family: 'Inter', sans-serif; font-weight: 600; color: #D97706;" id="pendingReports">-</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg" style="border: 1px solid #E2E8F0;">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6" style="color: #059669;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate" style="font-family: 'Inter', sans-serif; color: #64748B;">Resolved Reports</dt>
+                                    <dd class="text-lg font-medium" style="font-family: 'Inter', sans-serif; font-weight: 600; color: #059669;" id="resolvedReports">-</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white shadow rounded-lg" style="border: 1px solid #E2E8F0;">
+                    <div class="px-6 py-5 border-b border-gray-200" style="border-color: #E2E8F0;">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" style="font-family: 'Inter', sans-serif; font-weight: 600; color: #1E293B;">Breakdown Reports</h3>
+                        <p class="mt-1 text-sm text-gray-500" style="font-family: 'Inter', sans-serif; color: #64748B;">Manage and review breakdown reports</p>
+                    </div>
+                    <div class="px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-sm text-gray-500" style="font-family: 'Inter', sans-serif; color: #64748B;">
+                                    <span id="recentBreakdownCount">0</span> reports in last 7 days
+                                </div>
+                            </div>
+                            <a href="/breakdown_reports.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: #2563EB; font-family: 'Inter', sans-serif; font-weight: 600;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">
+                                View All Reports
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white shadow rounded-lg" style="border: 1px solid #E2E8F0;">
+                    <div class="px-6 py-5 border-b border-gray-200" style="border-color: #E2E8F0;">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" style="font-family: 'Inter', sans-serif; font-weight: 600; color: #1E293B;">Break Requests</h3>
+                        <p class="mt-1 text-sm text-gray-500" style="font-family: 'Inter', sans-serif; color: #64748B;">Review driver break requests</p>
+                    </div>
+                    <div class="px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-sm text-gray-500" style="font-family: 'Inter', sans-serif; color: #64748B;">
+                                    <span id="recentBreakRequestCount">0</span> requests in last 7 days
+                                </div>
+                            </div>
+                            <a href="/break_requests.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2" style="background-color: #2563EB; font-family: 'Inter', sans-serif; font-weight: 600;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">
+                                View All Requests
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg" style="border: 1px solid #E2E8F0;">
+                <div class="px-6 py-5 border-b border-gray-200" style="border-color: #E2E8F0;">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" style="font-family: 'Inter', sans-serif; font-weight: 600; color: #1E293B;">Recent Activity</h3>
+                    <p class="mt-1 text-sm text-gray-500" style="font-family: 'Inter', sans-serif; color: #64748B;">Latest breakdown reports and break requests</p>
+                </div>
+                <div class="px-6 py-4">
+                    <div id="recentActivityList" class="space-y-4">
+                        </div>
+                    <div id="noRecentActivity" class="text-center py-8 hidden">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900" style="font-family: 'Inter', sans-serif; font-weight: 500; color: #1E293B;">No recent activity</h3>
+                        <p class="mt-1 text-sm text-gray-500" style="font-family: 'Inter', sans-serif; color: #64748B;">No breakdown reports or break requests in the last 7 days.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingState" class="text-center py-20">
+        <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="mt-2 text-slate-600">Verifying access and loading dashboard...</p>
+    </div>
+
+    <script type="module">
+        import ClientAPI from '/client.js';
+        const client = new ClientAPI();
+
+        // --- Global Functions ---
+        window.toggleMobileMenu = function() {
+            document.getElementById('mobile-menu')?.classList.toggle('hidden');
+        };
+        window.redirectToLogin = () => window.location.href = '/login.html';
+        window.goBack = () => window.history.back();
+        
+        function logout() {
+            sessionStorage.removeItem('userToken');
+            localStorage.removeItem('userRole');
+            window.location.href = '/login.html';
+        }
+        window.logout = logout; // Make it globally accessible
+
+        // --- Authentication and Access Control ---
+        async function verifyManagerAccess() {
+            const token = sessionStorage.getItem('userToken');
+            const role = localStorage.getItem('userRole');
+
+            if (!token || role !== 'manager') {
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('accessDeniedModal').classList.remove('hidden');
+                return;
+            }
+
+            // If we are here, access is granted.
+            try {
+                // You could add a call to client.verifyToken(token) here in a real app
+                await loadDashboardData(); // Load data only after access is verified
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('dashboardContent').classList.remove('hidden');
+            } catch (error) {
+                console.error("Failed to load dashboard data:", error);
+                logout(); // If data loading fails due to auth error, log out
+            }
+        }
+
+        // --- Data Loading and Rendering ---
+        function getStatusColor(status) {
+            switch(status?.toLowerCase()) {
+                case 'resolved': return '#059669';
+                case 'pending': return '#D97706';
+                case 'urgent': return '#DC2626';
+                default: return '#64748B';
+            }
+        }
+        
+        function formatDate(timestamp) {
+            if (!timestamp) return 'N/A';
+            return new Date(timestamp * 1000).toLocaleString();
+        }
+
+        async function loadDashboardData() {
+            // Update UI to show we're loading
+            document.getElementById('totalBreakdownReports').textContent = '...';
+            document.getElementById('totalBreakRequests').textContent = '...';
+            document.getElementById('pendingReports').textContent = '...';
+            document.getElementById('resolvedReports').textContent = '...';
+
+            try {
+                const [breakdownResponse, breakRequestResponse] = await Promise.all([
+                    client.getBreakdownReports(),
+                    client.getBreakRequests()
+                ]);
+
+                const breakdownReports = breakdownResponse.breakdown_reports || [];
+                const breakRequests = breakRequestResponse.break_requests || [];
+
+                // Update stat cards
+                document.getElementById('totalBreakdownReports').textContent = breakdownReports.length;
+                document.getElementById('totalBreakRequests').textContent = breakRequests.length;
+                document.getElementById('pendingReports').textContent = breakdownReports.filter(r => r.status === 'pending').length;
+                document.getElementById('resolvedReports').textContent = breakdownReports.filter(r => r.status === 'resolved').length;
+
+                // Populate recent activity
+                populateRecentActivity(breakdownReports, breakRequests);
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+                // You might want to show an error message on the dashboard itself
+            }
+        }
+
+        function populateRecentActivity(breakdowns, breakRequests) {
+            const activityList = document.getElementById('recentActivityList');
+            const noActivity = document.getElementById('noRecentActivity');
+
+            const allActivity = [
+                ...breakdowns.map(report => ({ ...report, type: 'Breakdown' })),
+                ...breakRequests.map(request => ({ ...request, type: 'Break Request' }))
+            ].sort((a, b) => (b.submission_date || 0) - (a.submission_date || 0)).slice(0, 10);
+
+            if (allActivity.length === 0) {
+                noActivity.classList.remove('hidden');
+                activityList.innerHTML = '';
+                return;
+            }
+
+            noActivity.classList.add('hidden');
+            activityList.innerHTML = allActivity.map(item => {
+                const statusColor = getStatusColor(item.status);
+                return `
+                    <div class="flex items-center space-x-4 p-4 border rounded-lg" style="border-color: #E2E8F0;">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900">${item.type} - ${item.truck_registration_number || item.break_type}</p>
+                            <p class="text-sm text-gray-500">${item.driver_full_names || 'Unknown Driver'} • ${formatDate(item.submission_date)}</p>
+                        </div>
+                        <div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: ${statusColor}20; color: ${statusColor};">
+                                ${item.status || 'Request'}
+                            </span>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        // --- Page Initialization ---
+        document.addEventListener('DOMContentLoaded', verifyManagerAccess);
+    </script>
+</body>
+</html>
