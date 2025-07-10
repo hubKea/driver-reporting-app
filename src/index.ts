@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { database } from './utils/database';
 import logger from './utils/logger';
 import process from 'process';

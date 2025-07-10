@@ -35,8 +35,32 @@ async function insertMockData(db: Db) {
 
         // Create Break Requests
         const requests = [
-            new DataModel.BreakRequest('req-001', 'driver-03', 'fatigue', 30, Math.floor(Date.now() / 1000) - 43200, 'Long day', 'Peter Jones', 'Trucking Inc', 'Midrand', new Date()),
-            new DataModel.BreakRequest('req-002', 'driver-04', 'lunch', 60, Math.floor(Date.now() / 1000) - 259200, 'Lunch break', 'Mary Williams', 'Trucking Inc', 'Centurion', new Date()),
+            new DataModel.BreakRequest(
+                'req-001', // request_details
+                'driver-03', // user_id
+                'fatigue', // break_type
+                30, // break_duration
+                Math.floor(Date.now() / 1000) - 43200, // submission_date
+                'Long day', // notes
+                'Peter Jones', // driver_name
+                'Trucking Inc', // company_name
+                'Midrand', // location
+                '555-8888', // phone_number
+                new Date() // created_at
+            ),
+            new DataModel.BreakRequest(
+                'req-002',
+                'driver-04',
+                'lunch',
+                60,
+                Math.floor(Date.now() / 1000) - 259200,
+                'Lunch break',
+                'Mary Williams',
+                'Trucking Inc',
+                'Centurion',
+                '555-9999',
+                new Date()
+            ),
         ];
         await requestsCollection.insertMany(requests.map(r => ({...r})));
         logger.info(`✅ Inserted ${requests.length} mock break requests.`);

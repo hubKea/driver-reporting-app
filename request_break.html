@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" href="/favicon.jpg" type="image/jpeg"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <title>Request Break - Driver Reporting System</title>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Primary Background */
+            background-color: #f8fafc;
         }
         .header {
-            background-color: #1f2937; /* Dark Charcoal Header */
+            background-color: #1f2937;
             border-bottom: 1px solid #374151;
         }
         .header-title {
@@ -22,25 +21,32 @@
             font-weight: 700;
         }
         .nav-link {
-            color: #d1d5db; /* Lighter text for nav links */
+            color: #d1d5db;
             font-weight: 500;
-            transition: color 0.2s;
+            transition: color 0.2s, background-color 0.2s;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
         }
-        .nav-link:hover, .nav-link-active {
-            color: #ffffff; /* Brighter on hover/active */
+        .nav-link:hover {
+            background-color: #374151;
+            color: #ffffff;
+        }
+        .nav-link-active {
+            background-color: #4b5563;
+            color: #ffffff;
         }
         .card {
             background-color: #ffffff;
-            border-radius: 0.75rem; /* rounded-xl */
+            border-radius: 0.75rem;
             border: 1px solid #e5e7eb;
             box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
         }
         .btn-primary {
-            background-color: #3b82f6; /* Vibrant Blue Accent */
+            background-color: #3b82f6;
             color: #ffffff;
             font-weight: 600;
-            border-radius: 0.5rem; /* rounded-lg */
-            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
             transition: background-color 0.2s;
         }
         .btn-primary:hover {
@@ -61,63 +67,75 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <header class="shadow-lg">
+<body>
+    <header class="header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <h1 class="text-xl font-bold text-white">Driver Reporting System</h1>
+                        <h1 class="text-xl header-title">Driver Reporting System</h1>
                     </div>
                 </div>
                 <nav class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="/report_breakdown.html" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200">Report Breakdown</a>
-                        <a href="/request_break.html" class="px-3 py-2 rounded-md text-sm font-medium text-white transition-colors duration-200">Request Break</a>
+                    <div class="ml-10 flex items-baseline space-x-2">
+                        <a href="/report_breakdown.html" class="nav-link">Report Breakdown</a>
+                        <a href="/request_break.html" class="nav-link nav-link-active">Request Break</a>
                     </div>
                 </nav>
             </div>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-slate-800">Request Break</h1>
-            <p class="text-slate-600">Submit a request for a fatigue or lunch break during your shift.</p>
+    <main class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-slate-900">Request a Break</h1>
+            <p class="mt-2 text-slate-600">Submit a request for a fatigue or lunch break.</p>
         </div>
 
-        <div id="successMessage" class="hidden mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+        <div id="successMessage" class="hidden mb-6 card p-4 bg-green-50 border-green-200">
             <h3 class="text-sm font-medium text-green-800">Break request submitted successfully!</h3>
         </div>
-        <div id="errorMessage" class="hidden mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-            <h3 class="text-sm font-medium text-red-800" id="errorText"></h3>
+        <div id="errorMessage" class="hidden mb-6 card p-4 bg-red-50 border-red-200">
+            <h3 class="text-sm font-medium text-red-700" id="errorText"></h3>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md border border-slate-200 p-6">
+        <div class="card p-8">
             <form id="breakRequestForm" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" id="driverFullName" name="driver_name" required class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Driver Full Names *"/>
-                    <input type="text" id="truckRegistrationNumber" name="truck_registration_number" required class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Truck Registration Number *"/>
-                    <input type="text" id="companyName" name="company_name" required class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Company Name *"/>
-                    <input type="text" id="location" name="location" required class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Current Location *"/>
+                    <div>
+                        <label for="driverFullName" class="block text-sm font-medium text-slate-700 mb-2">Driver Full Names *</label>
+                        <input type="text" id="driverFullName" name="driver_name" required class="form-input" placeholder="Enter your full name"/>
+                    </div>
+                    <div>
+                        <label for="cellphoneNumber" class="block text-sm font-medium text-slate-700 mb-2">Cellphone Number *</label>
+                        <input type="tel" id="cellphoneNumber" name="cellphone_number" required class="form-input" placeholder="e.g., 082 123 4567"/>
+                    </div>
+                    <div>
+                        <label for="companyName" class="block text-sm font-medium text-slate-700 mb-2">Company Name *</label>
+                        <input type="text" id="companyName" name="company_name" required class="form-input" placeholder="Enter your company name"/>
+                    </div>
+                    <div>
+                        <label for="location" class="block text-sm font-medium text-slate-700 mb-2">Current Location *</label>
+                        <input type="text" id="location" name="location" required class="form-input bg-slate-50" placeholder="Fetching location..." readonly/>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200">
                     <div>
-                        <label for="breakType" class="block text-sm font-medium text-slate-700 mb-2">Break Type <span class="text-red-500">*</span></label>
-                        <select id="breakType" name="break_type" required class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="breakType" class="block text-sm font-medium text-slate-700 mb-2">Break Type *</label>
+                        <select id="breakType" name="break_type" required class="form-input">
                             <option value="fatigue">Fatigue Break</option>
                             <option value="lunch">Lunch Break</option>
                         </select>
                     </div>
                     <div>
-                        <label for="breakDuration" class="block text-sm font-medium text-slate-700 mb-2">Break Duration (minutes) <span class="text-red-500">*</span></label>
-                        <input type="number" id="breakDuration" name="break_duration" required class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., 30"/>
+                        <label for="breakDuration" class="block text-sm font-medium text-slate-700 mb-2">Break Duration (minutes) *</label>
+                        <input type="number" id="breakDuration" name="break_duration" required class="form-input" placeholder="e.g., 30"/>
                     </div>
                 </div>
 
-                <div class="flex justify-end pt-4">
-                    <button type="submit" id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow-sm">
+                <div class="flex justify-end pt-6">
+                    <button type="submit" id="submitBtn" class="btn-primary w-full md:w-auto">
                         Submit Break Request
                     </button>
                 </div>
@@ -129,19 +147,46 @@
         import ClientAPI from '/client.js';
         const client = new ClientAPI();
 
-        function showError(message) {
-            const errorText = document.getElementById('errorText');
-            errorText.textContent = message;
-            document.getElementById('errorMessage').classList.remove('hidden');
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showErrorLocation);
+            } else {
+                showError('Geolocation is not supported by this browser.');
+            }
         }
 
-        document.getElementById('breakRequestForm').addEventListener('submit', async function(e) {
+        function showPosition(position) {
+            const locationInput = document.getElementById('location');
+            if (locationInput) {
+                locationInput.value = `Lat: ${position.coords.latitude.toFixed(5)}, Lon: ${position.coords.longitude.toFixed(5)}`;
+            }
+        }
+
+        function showErrorLocation(error) {
+            let message = "An unknown error occurred.";
+            switch(error.code) {
+                case error.PERMISSION_DENIED: message = "User denied the request for Geolocation."; break;
+                case error.POSITION_UNAVAILABLE: message = "Location information is unavailable."; break;
+                case error.TIMEOUT: message = "The request to get user location timed out."; break;
+            }
+            const locationInput = document.getElementById('location');
+            if (locationInput) locationInput.placeholder = message;
+        }
+
+        function showError(message) {
+            const errorText = document.getElementById('errorText');
+            if(errorText) {
+                errorText.textContent = message;
+                document.getElementById('errorMessage')?.classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('breakRequestForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = new FormData(e.target);
             const breakRequestData = Object.fromEntries(formData.entries());
             
-            // Convert break_duration to a number
             breakRequestData.break_duration = parseInt(breakRequestData.break_duration, 10);
 
             if (!breakRequestData.driver_name || !breakRequestData.break_type || !breakRequestData.break_duration) {
@@ -150,16 +195,23 @@
             }
             
             try {
-                const response = await client.createBreakRequest(breakRequestData);
+                const response = await client.createBreakRequest(breakRequestData, {
+                    'x-storm-userid': 'driver_007' // Simulating a logged-in driver
+                });
+
                 if (response && response.id) {
-                    document.getElementById('successMessage').classList.remove('hidden');
-                    document.getElementById('errorMessage').classList.add('hidden');
+                    document.getElementById('successMessage')?.classList.remove('hidden');
+                    document.getElementById('errorMessage')?.classList.add('hidden');
                     e.target.reset();
+                    getLocation(); // Re-fetch location for the next form
                 }
             } catch (error) {
                 showError(error.message || 'Failed to submit break request.');
             }
         });
+
+        // Get location as soon as the page loads
+        document.addEventListener('DOMContentLoaded', getLocation);
     </script>
 </body>
 </html>

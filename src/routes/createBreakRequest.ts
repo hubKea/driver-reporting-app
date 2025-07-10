@@ -9,6 +9,7 @@ interface BreakRequestRequest {
   break_type: string;
   break_duration: number;
   driver_name: string;
+  cellphone_number: string;
   company_name: string;
   location: string;
 }
@@ -38,7 +39,7 @@ const createBreakRequest = (): express.RequestHandler => {
         return;
       }
 
-      const { break_type, break_duration, driver_name, company_name, location }: BreakRequestRequest = req.body;
+      const { break_type, break_duration, driver_name, cellphone_number, company_name, location }: BreakRequestRequest = req.body;
 
       // Validate break_type
       if (!break_type) {
@@ -115,6 +116,7 @@ const createBreakRequest = (): express.RequestHandler => {
   submissionDate,
   '', // notes initialized as empty string
   driver_name,
+  cellphone_number,  
   company_name,
   location,
   new Date() // This is the missing argument

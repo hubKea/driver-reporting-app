@@ -84,6 +84,7 @@ export class BreakRequest {
         public submission_date: number,
         public notes: string,
         public driver_name: string,
+        public cellphone_number: string,
         public company_name: string,
         public location: string,
         public date_range: Date
@@ -99,9 +100,10 @@ export class BreakRequest {
             data.submission_date || 0,
             data.notes || '',
             data.driver_name || '',
+            data.cellphone_number || '',
             data.company_name || '',
             data.location || '',
-            data.created_at ? new Date(data.created_at) : new Date()
+            data.date_range ? new Date(data.date_range) : new Date()
         );
     }
 
